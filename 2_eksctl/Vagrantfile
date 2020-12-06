@@ -1,0 +1,41 @@
+IMAGE_NAME = "centos/7"
+IP = "192.168.219.33"
+HOSTNAME = "aws-cli"
+
+Vagrant.configure("2") do |config|
+  config.ssh.insert_key = false
+
+  config.vm.define HOSTNAME do |cfg|
+    cfg.vm.box = IMAGE_NAME
+    cfg.vm.network "public_network", ip: IP
+    cfg.vm.hostname = HOSTNAME
+    
+    cfg.vm.provider "virtualbox" do |v|
+      v.memory = 2048
+      v.cpus = 4
+      v.name = HOSTNAME
+    end
+
+    # install aws-cli
+    cfg.vm.provision "shell", inline: <<-SCRIPT
+      yum install epel-release -y
+      yum install unzip -y
+      curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      unzip awscliv2.zip
+      ./aws/install
+    SCRIPT
+
+    # install eksctl
+    cfg.vm.provision "shell", inline: <<-SCRIPT
+      curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+      mv /tmp/eksctl /usr/local/bin
+    SCRIPT
+
+    # install kubectl
+    cfg.vm.provision "shell", inline: <<-SCRIPT
+      curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.18.8/2020-09-18/bin/linux/amd64/kubectl
+      chmod +x ./kubectl
+      mv ./kubectl /usr/local/bin
+    SCRIPT
+  end
+end
