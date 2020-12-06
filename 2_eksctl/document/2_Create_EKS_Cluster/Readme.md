@@ -8,12 +8,9 @@
 ## 2.1 eksctl 명령어 실행
 
 ![](./run_eksctl_command.jpg)
-
 <br> 설치 중
 
 ![](./finsih_install.jpg)
-
-
 <br> 설치 끝
 
 <br>
