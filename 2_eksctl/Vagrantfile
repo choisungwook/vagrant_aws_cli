@@ -25,6 +25,13 @@ Vagrant.configure("2") do |config|
       ./aws/install
     SCRIPT
 
+    # install npt, nptupdate
+    cfg.vm.provision "shell", inline: <<-SCRIPT
+      sudo apt install ntp -y
+      sudo apt install ntpdate -y
+      sudo ntpdate pool.ntp.org
+    SCRIPT
+
     # install eksctl
     cfg.vm.provision "shell", inline: <<-SCRIPT
       curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
@@ -32,10 +39,10 @@ Vagrant.configure("2") do |config|
     SCRIPT
 
     # install kubectl
-    cfg.vm.provision "shell", inline: <<-SCRIPT
-      curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.18.8/2020-09-18/bin/linux/amd64/kubectl
-      chmod +x ./kubectl
-      mv ./kubectl /usr/local/bin
-    SCRIPT
+    # cfg.vm.provision "shell", inline: <<-SCRIPT
+    #   curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.18.8/2020-09-18/bin/linux/amd64/kubectl
+    #   chmod +x ./kubectl
+    #   mv ./kubectl /usr/local/bin
+    # SCRIPT
   end
 end
